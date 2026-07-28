@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS · AI Registration Assistant</title>
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/chart.umd.js"></script>
+</head>
+<body>
+
+<canvas id="particleCanvas"></canvas>
+<div class="veil"></div>
+
+<div class="app">
+
+  <header class="top">
+    <div class="brand">
+      <div class="logo"><img src="assets/logo.svg" alt="NEXUS logo"></div>
+      <div class="brand-text">
+        <div class="name">NEXUS</div>
+        <div class="sub" data-i18n="tagline">AI Registration Assistant</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="status-pill">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusLabel">Connecting to backend…</span>
+      </div>
+      <select id="langSelect" class="lang-select" title="Language">
+        <option value="en">EN</option>
+        <option value="hi">हिंदी</option>
+        <option value="es">ES</option>
+        <option value="fr">FR</option>
+      </select>
+    </div>
+    <nav class="tabs">
+      <button class="tab-btn active" data-view="chat" data-i18n="nav_chat">Chat</button>
+      <button class="tab-btn" data-view="eligibility" data-i18n="nav_eligibility">Eligibility</button>
+      <button class="tab-btn" data-view="recommend" data-i18n="nav_recommend">Recommend</button>
+      <button class="tab-btn" data-view="career" data-i18n="nav_career">Career Hub</button>
+      <button class="tab-btn" data-view="resume" data-i18n="nav_resume">Resume</button>
+      <button class="tab-btn" data-view="register" data-i18n="nav_register">Register</button>
+      <button class="tab-btn" data-view="dashboard" data-i18n="nav_dashboard">Dashboard</button>
+    </nav>
+  </header>
+
+  <!-- CHAT VIEW -->
+  <section class="view active" id="view-chat">
+    <div class="eyebrow" data-i18n="home_eyebrow">Home</div>
+    <h1 class="page-title" data-i18n="chat_title">Ask me anything about registration</h1>
+    <p class="page-desc" data-i18n="chat_desc">I'm connected to a Flask API and a Gen AI model that can check eligibility, list open courses, confirm deadlines, and walk you through registering. Try the mic — I can listen and talk back.</p>
+
+    <div class="grid-2">
+      <div class="panel chat-shell">
+        <div class="chat-log" id="chatLog"></div>
+        <div class="chips" id="chatChips"></div>
+        <div class="chat-input-row">
+          <button class="btn ghost mic-btn" id="micBtn" title="Voice input">🎤</button>
+          <input type="text" id="chatInput" placeholder="Ask about courses, deadlines, eligibility…" />
+          <button class="btn" id="chatSend" data-i18n="send">Send</button>
+        </div>
+        <label class="voice-toggle"><input type="checkbox" id="voiceReplyToggle"> <span data-i18n="speak_replies">Speak replies aloud</span></label>
+      </div>
+
+      <div class="panel">
+        <div class="eyebrow" data-i18n="student_details">Student details</div>
+        <label data-i18n="full_name">Full name</label>
+        <input type="text" id="qName" placeholder="e.g. Ananya Sharma">
+        <div class="field-row">
+          <div><label data-i18n="roll_number">Roll number</label><input type="text" id="qRoll" placeholder="e.g. 21CS045"></div>
+          <div><label data-i18n="department">Department</label>
+            <select id="qDept">
+              <option>Computer Science</option>
+              <option>Information Technology</option>
+              <option>Electronics</option>
+              <option>Mechanical</option>
+              <option>Civil</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div><label data-i18n="semester">Semester</label>
+            <select id="qSem">
+              <option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option>
+            </select>
+          </div>
+          <div><label>CGPA</label><input type="number" step="0.01" min="0" max="10" id="qCgpa" placeholder="e.g. 8.2"></div>
+        </div>
+        <label data-i18n="active_backlogs">Active backlogs</label>
+        <input type="number" min="0" id="qBacklog" placeholder="0">
+        <label data-i18n="interests_label">Interests (for recommendations)</label>
+        <input type="text" id="qInterests" placeholder="e.g. AI, cloud infrastructure, security">
+        <button class="btn ghost" style="width:100%" id="saveDetails" data-i18n="save_profile">Save details to profile</button>
+        <p style="color:var(--dimmer); font-size:12px; margin-top:12px; line-height:1.5;" data-i18n="save_profile_hint">Saved details auto-fill every other tab, and unlock personalized recommendations, chat answers, and badges.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ELIGIBILITY VIEW -->
+  <section class="view" id="view-eligibility">
+    <div class="eyebrow" data-i18n="step1">Step 01</div>
+    <h1 class="page-title" data-i18n="elig_title">Eligibility checker</h1>
+    <p class="page-desc" data-i18n="elig_desc">Your details are scored by a trained ML classifier (scikit-learn) served from the Flask backend — not just fixed thresholds.</p>
+
+    <div class="grid-2">
+      <div class="panel">
+        <label data-i18n="full_name">Full name</label>
+        <input type="text" id="eName" placeholder="e.g. Ananya Sharma">
+        <div class="field-row">
+          <div><label data-i18n="roll_number">Roll number</label><input type="text" id="eRoll" placeholder="e.g. 21CS045"></div>
+          <div><label data-i18n="department">Department</label>
+            <select id="eDept">
+              <option>Computer Science</option>
+              <option>Information Technology</option>
+              <option>Electronics</option>
+              <option>Mechanical</option>
+              <option>Civil</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div><label data-i18n="semester">Semester</label>
+            <select id="eSem"><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select>
+          </div>
+          <div><label>CGPA</label><input type="number" step="0.01" min="0" max="10" id="eCgpa" placeholder="e.g. 8.2"></div>
+        </div>
+        <label data-i18n="active_backlogs">Active backlogs</label>
+        <input type="number" min="0" id="eBacklog" placeholder="0">
+        <button class="btn" style="width:100%" id="checkEligibility" data-i18n="check_eligibility">Check eligibility</button>
+        <div class="result-box" id="eligResult"></div>
+      </div>
+
+      <div class="panel">
+        <div class="eyebrow" data-i18n="course_requirements">Course requirements</div>
+        <div id="reqList" style="display:flex; flex-direction:column; gap:12px; margin-top:10px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECOMMEND VIEW -->
+  <section class="view" id="view-recommend">
+    <div class="eyebrow" data-i18n="recommend_eyebrow">AI Powered</div>
+    <h1 class="page-title" data-i18n="recommend_title">Course recommendations</h1>
+    <p class="page-desc" data-i18n="recommend_desc">Describe what you're interested in — a TF-IDF content model (scikit-learn) matches it against every course's skills and career paths, and blends in your eligibility.</p>
+
+    <div class="panel" style="margin-bottom:20px;">
+      <label data-i18n="interests_label2">What are you interested in?</label>
+      <input type="text" id="recInterests" placeholder="e.g. I enjoy building things with Python and I'm curious about AI">
+      <button class="btn" id="getRecommendations" data-i18n="get_recommendations">Get recommendations</button>
+    </div>
+
+    <div id="recommendResults" class="rec-grid"></div>
+  </section>
+
+  <!-- CAREER HUB VIEW -->
+  <section class="view" id="view-career">
+    <div class="eyebrow" data-i18n="career_eyebrow">AI Powered</div>
+    <h1 class="page-title" data-i18n="career_title">Career Hub</h1>
+    <p class="page-desc" data-i18n="career_desc">Pick a course to get a month-by-month roadmap, a skill-gap analysis against real job requirements, and AI-generated mock interview questions.</p>
+
+    <div class="panel" style="margin-bottom:20px;">
+      <label data-i18n="choose_course">Choose a course</label>
+      <select id="careerCourse">
+        <option value="AIML">AI & Machine Learning</option>
+        <option value="DS">Data Science</option>
+        <option value="WEB">Web Development</option>
+        <option value="CYB">Cyber Security</option>
+        <option value="CLOUD">Cloud Computing</option>
+      </select>
+      <label data-i18n="your_skills">Your current skills (comma separated)</label>
+      <input type="text" id="careerSkills" placeholder="e.g. Python, HTML, Git">
+
+      <div class="career-btn-row">
+        <button class="btn" id="getRoadmap" data-i18n="get_roadmap">Career roadmap</button>
+        <button class="btn ghost" id="getSkillGap" data-i18n="get_skillgap">Skill gap analysis</button>
+        <button class="btn ghost" id="getInterview" data-i18n="get_interview">Interview prep</button>
+        <button class="btn ghost" id="getPlacement" data-i18n="get_placement">Placement probability</button>
+      </div>
+    </div>
+
+    <div id="careerResults"></div>
+  </section>
+
+  <!-- RESUME VIEW -->
+  <section class="view" id="view-resume">
+    <div class="eyebrow" data-i18n="resume_eyebrow">AI Powered</div>
+    <h1 class="page-title" data-i18n="resume_title">Resume analyzer</h1>
+    <p class="page-desc" data-i18n="resume_desc">Paste your resume text or upload a PDF/TXT file. I'll extract your skills, match you to courses, and give feedback.</p>
+
+    <div class="grid-2">
+      <div class="panel">
+        <label data-i18n="resume_paste">Paste resume text</label>
+        <textarea id="resumeText" rows="10" placeholder="Paste your resume content here…" style="width:100%; background:var(--void); border:1px solid var(--line); border-radius:9px; padding:12px; color:var(--text); font-family:'Inter',sans-serif; font-size:13.5px; margin-bottom:14px; resize:vertical;"></textarea>
+        <label data-i18n="resume_upload">…or upload a file (PDF / TXT)</label>
+        <input type="file" id="resumeFile" accept=".pdf,.txt" style="margin-bottom:14px;">
+        <button class="btn" style="width:100%" id="analyzeResume" data-i18n="analyze_resume">Analyze resume</button>
+      </div>
+      <div class="panel" id="resumeResultPanel">
+        <div class="eyebrow" data-i18n="results">Results</div>
+        <p style="color:var(--dimmer); font-size:13px;" id="resumePlaceholder" data-i18n="resume_placeholder">Your analysis will appear here.</p>
+        <div id="resumeResults" style="display:none;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGISTER VIEW -->
+  <section class="view" id="view-register">
+    <div class="eyebrow" data-i18n="step2">Step 02</div>
+    <h1 class="page-title" data-i18n="register_title">Course registration</h1>
+    <p class="page-desc" data-i18n="register_desc">Choose a course below. You'll need saved student details — visit the Chat tab first if you haven't added yours.</p>
+    <input type="text" id="courseSearch" class="course-search" placeholder="Search courses by name, code, or skill (e.g. &quot;python&quot;, &quot;docker&quot;, &quot;design&quot;)..." />
+    <div class="course-grid" id="courseGrid"></div>
+  </section>
+
+  <!-- DASHBOARD VIEW -->
+  <section class="view" id="view-dashboard">
+    <div class="eyebrow" data-i18n="overview">Overview</div>
+    <h1 class="page-title" data-i18n="dashboard_title">Registration dashboard</h1>
+    <p class="page-desc" data-i18n="dashboard_desc">Live analytics from the SQLite database via the Flask API.</p>
+
+    <div class="stat-grid">
+      <div class="stat-card"><div class="num" id="statTotal">0</div><div class="label" data-i18n="stat_total">Total registrations</div></div>
+      <div class="stat-card"><div class="num" id="statEligible">0</div><div class="label" data-i18n="stat_eligible">Eligible students checked</div></div>
+      <div class="stat-card"><div class="num" id="statCourses">0</div><div class="label" data-i18n="stat_courses">Courses with registrations</div></div>
+      <div class="stat-card"><div class="num" id="statBusiest">—</div><div class="label" data-i18n="stat_busiest">Most registered course</div></div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="panel">
+        <div class="eyebrow" data-i18n="chart_by_course">Registrations by course</div>
+        <canvas id="chartByCourse" height="200"></canvas>
+      </div>
+      <div class="panel">
+        <div class="eyebrow" data-i18n="chart_by_dept">By department</div>
+        <canvas id="chartByDept" height="200"></canvas>
+      </div>
+      <div class="panel" style="grid-column:1 / -1;">
+        <div class="eyebrow" data-i18n="chart_timeline">Registrations over time</div>
+        <canvas id="chartTimeline" height="120"></canvas>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:20px;">
+      <div class="eyebrow" data-i18n="my_badges">My achievement badges</div>
+      <div class="field-row" style="align-items:end;">
+        <div><label data-i18n="roll_number">Roll number</label><input type="text" id="badgeRoll" placeholder="e.g. 21CS045"></div>
+        <div><button class="btn" style="width:100%" id="loadBadges" data-i18n="load_badges">Load badges</button></div>
+      </div>
+      <div class="badge-grid" id="badgeGrid"></div>
+    </div>
+
+    <div class="panel">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div class="eyebrow" data-i18n="registrations">Registrations</div>
+        <button class="btn ghost" id="clearAllRegs" style="padding:8px 16px; font-size:12.5px;">Clear all</button>
+      </div>
+      <table>
+        <thead><tr><th>Reg. ID</th><th data-i18n="th_student">Student</th><th data-i18n="th_course">Course</th><th data-i18n="th_date">Date</th><th data-i18n="th_receipt">Receipt</th><th></th></tr></thead>
+        <tbody id="regTableBody">
+          <tr class="empty-row"><td colspan="6" data-i18n="no_registrations">No registrations yet — head to the Register tab.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p class="footer-credit">Devloped by <b>Rohan Bhowmik</b> Aspiring AI/ML, Data Science and Web Development</p>
+    <div class="footer-socials">
+      <a href="https://www.linkedin.com/in/rohan-bhowmik-b014473a1" target="_blank" rel="noopener noreferrer" title="LinkedIn">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+        <span>LinkedIn</span>
+      </a>
+      <a href="https://github.com/rohanbhowm25308" target="_blank" rel="noopener noreferrer" title="GitHub">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.57 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.05 0-1.11.38-2.03 1.01-2.74-.1-.26-.44-1.31.1-2.72 0 0 .83-.27 2.72 1.05a9.16 9.16 0 0 1 4.96 0c1.89-1.32 2.72-1.05 2.72-1.05.54 1.41.2 2.46.1 2.72.63.71 1.01 1.63 1.01 2.74 0 3.92-2.34 4.78-4.57 5.04.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.49A10.25 10.25 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg>
+        <span>GitHub</span>
+      </a>
+      <a href="https://www.instagram.com/rohan_._.bhowmik.84" target="_blank" rel="noopener noreferrer" title="Instagram">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+        <span>Instagram</span>
+      </a>
+    </div>
+  </footer>
+
+</div>
+
+<!-- CONFIRMATION MODAL -->
+<div class="modal-backdrop" id="confirmModal">
+  <div class="modal">
+    <div class="check">✓</div>
+    <h2 data-i18n="reg_success">Registration successful</h2>
+    <div class="receipt-row"><span data-i18n="th_student">Student</span><b id="mStudent">—</b></div>
+    <div class="receipt-row"><span data-i18n="th_course">Course</span><b id="mCourse">—</b></div>
+    <div class="receipt-row"><span>Registration ID</span><b id="mRegId">—</b></div>
+    <div class="receipt-row"><span data-i18n="th_date">Date</span><b id="mDate">—</b></div>
+    <img id="mQr" class="qr-preview" alt="QR verification code" />
+    <p style="color:var(--dimmer); font-size:11.5px; margin-top:4px;" data-i18n="qr_hint">Scan to verify this registration</p>
+    <div class="modal-actions">
+      <button class="btn ghost" id="mClose" data-i18n="close">Close</button>
+      <button class="btn" id="mDownload" data-i18n="download_receipt">Download receipt</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/i18n.js"></script>
+<script src="js/particles.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

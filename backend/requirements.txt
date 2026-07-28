@@ -1,0 +1,11 @@
+flask
+flask-cors
+python-dotenv
+requests
+scikit-learn
+pandas
+joblib
+fpdf2
+qrcode[pil]
+pypdf
+gunicorn

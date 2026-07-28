@@ -1,0 +1,15 @@
+# secrets — never commit
+backend/.env
+
+# python
+__pycache__/
+*.pyc
+backend/venv/
+backend/env/
+
+# database (local data, not source code)
+backend/nexus.db
+
+# OS/editor junk
+.DS_Store
+Thumbs.db
