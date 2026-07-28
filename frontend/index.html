@@ -74,11 +74,13 @@
           <div><label data-i18n="roll_number">Roll number</label><input type="text" id="qRoll" placeholder="e.g. 21CS045"></div>
           <div><label data-i18n="department">Department</label>
             <select id="qDept">
-              <option>Computer Science</option>
-              <option>Information Technology</option>
-              <option>Electronics</option>
-              <option>Mechanical</option>
-              <option>Civil</option>
+              <option>Computer Science (CS)</option>
+              <option>Artificial Intelligence and Machine Learning (AI/ML)</option>
+              <option>Data Science (DS)</option>
+              <option>Information Technology (IT)</option>
+              <option>Electronics Engineering (EE)</option>
+              <option>Mechanical Engineering (ME)</option>
+              <option>Civil Engineering (CE)</option>
             </select>
           </div>
         </div>
@@ -114,11 +116,13 @@
           <div><label data-i18n="roll_number">Roll number</label><input type="text" id="eRoll" placeholder="e.g. 21CS045"></div>
           <div><label data-i18n="department">Department</label>
             <select id="eDept">
-              <option>Computer Science</option>
-              <option>Information Technology</option>
-              <option>Electronics</option>
-              <option>Mechanical</option>
-              <option>Civil</option>
+              <option>Computer Science (CS)</option>
+              <option>Artificial Intelligence and Machine Learning (AI/ML)</option>
+              <option>Data Science (DS)</option>
+              <option>Information Technology (IT)</option>
+              <option>Electronics Engineering (EE)</option>
+              <option>Mechanical Engineering (ME)</option>
+              <option>Civil Engineering (CE)</option>
             </select>
           </div>
         </div>
@@ -165,11 +169,105 @@
     <div class="panel" style="margin-bottom:20px;">
       <label data-i18n="choose_course">Choose a course</label>
       <select id="careerCourse">
-        <option value="AIML">AI & Machine Learning</option>
-        <option value="DS">Data Science</option>
-        <option value="WEB">Web Development</option>
-        <option value="CYB">Cyber Security</option>
-        <option value="CLOUD">Cloud Computing</option>
+        <optgroup label="Computer Science">
+    <option value="AIML">AI &amp; Machine Learning</option>
+    <option value="DS">Data Science</option>
+    <option value="WEB">Web Development</option>
+    <option value="CYB">Cyber Security</option>
+    <option value="CLOUD">Cloud Computing</option>
+    <option value="FULLSTACK">Full Stack Development</option>
+    <option value="BACKEND">Backend Development</option>
+    <option value="DEVOPS">DevOps Engineering</option>
+    <option value="ANALYTICS">Data &amp; Business Analytics</option>
+    <option value="MOBILE">Mobile App Development</option>
+    <option value="UIUX">UI/UX Design</option>
+    <option value="BLOCKCHAIN">Blockchain &amp; Web3</option>
+    <option value="PHYSICS">Applied Physics</option>
+    <option value="MATHS">Engineering Mathematics</option>
+    <option value="CPROG">C Programming</option>
+    <option value="CPP">C++ Programming</option>
+    <option value="JAVA">Java Programming</option>
+    <option value="PYTHON">Python Programming</option>
+    <option value="DSA">Data Structures &amp; Algorithms</option>
+    <option value="FLASK">Flask Web Development</option>
+    <option value="FRONTEND">Frontend Development</option>
+    <option value="SQL">SQL &amp; Database Querying</option>
+    <option value="OOP">Object-Oriented Programming</option>
+    <option value="DBMS">Database Management Systems</option>
+    <option value="SWE">Software Engineering</option>
+    <option value="SYSDESIGN">System Design</option>
+    <option value="DOCKER">Docker &amp; Containerization</option>
+    <option value="FASTAPI">FastAPI Web Development</option>
+    <option value="GENAI">Generative AI</option>
+    <option value="ML">Machine Learning</option>
+    <option value="DATAANALYTICS">Data Analytics</option>
+    <option value="IOT">Internet of Things</option>
+    <option value="DWDM">Data Warehousing &amp; Data Mining</option>
+    <option value="OS">Operating Systems</option>
+    <option value="ACA">Advanced Computer Architecture</option>
+    <option value="DAA">Design &amp; Analysis of Algorithms</option>
+    <option value="ROBOTICS">Robotics</option>
+    <option value="VISUALPROG">Visual Programming</option>
+    <option value="NETWORKS">Computer Networks</option>
+    <option value="COMPILERS">Compiler Design</option>
+    <option value="GRAPHICS">Computer Graphics</option>
+  </optgroup>
+  <optgroup label="Electronics">
+    <option value="DIGELEC">Digital Electronics</option>
+    <option value="ANALOGELEC">Analog Electronics</option>
+    <option value="EDC">Electronic Devices &amp; Circuits</option>
+    <option value="MICROPROC">Microprocessors &amp; Microcontrollers</option>
+    <option value="VLSI">VLSI Design</option>
+    <option value="SIGSYS">Signals &amp; Systems</option>
+    <option value="CONTROLSYS">Control Systems</option>
+    <option value="COMMSYS">Communication Systems</option>
+    <option value="POWERELEC">Power Electronics</option>
+    <option value="EMBEDDEDSYS">Embedded Systems Design</option>
+    <option value="PCBDESIGN">PCB Design &amp; Fabrication</option>
+    <option value="EMFT">Electromagnetic Field Theory</option>
+  </optgroup>
+  <optgroup label="Mechanical">
+    <option value="THERMO">Thermodynamics</option>
+    <option value="FLUIDMECH">Fluid Mechanics</option>
+    <option value="SOM">Strength of Materials</option>
+    <option value="MACHDESIGN">Machine Design</option>
+    <option value="MANUFPROC">Manufacturing Processes</option>
+    <option value="CADCAM">CAD/CAM</option>
+    <option value="HEATTRANSFER">Heat Transfer</option>
+    <option value="AUTOENG">Automobile Engineering</option>
+    <option value="INDENG">Industrial Engineering</option>
+    <option value="VIBRATIONS">Mechanical Vibrations</option>
+    <option value="RENEWENERGY">Renewable Energy Systems</option>
+    <option value="MECHATRONICS">Mechatronics</option>
+  </optgroup>
+  <optgroup label="Civil">
+    <option value="STRUCTENG">Structural Engineering</option>
+    <option value="GEOTECH">Geotechnical Engineering</option>
+    <option value="SURVEYING">Surveying</option>
+    <option value="BUILDMAT">Building Materials &amp; Construction</option>
+    <option value="TRANSPORTENG">Transportation Engineering</option>
+    <option value="ENVENG">Environmental Engineering</option>
+    <option value="CONCRETETECH">Concrete Technology</option>
+    <option value="WATERRESOURCE">Water Resources Engineering</option>
+    <option value="CONSTRUCTMGMT">Construction Management</option>
+    <option value="STEELDESIGN">Steel Structure Design</option>
+    <option value="EARTHQUAKEENG">Earthquake Engineering</option>
+    <option value="URBANPLAN">Urban Planning</option>
+  </optgroup>
+  <optgroup label="Information Technology">
+    <option value="ISM">Information Systems Management</option>
+    <option value="NETADMIN">Network Administration</option>
+    <option value="ITINFRA">IT Infrastructure &amp; Cloud Services</option>
+    <option value="DIGFORENSICS">Digital Forensics</option>
+    <option value="ERP">Enterprise Resource Planning</option>
+    <option value="ITPM">IT Project Management</option>
+    <option value="INFOSECMGMT">Information Security Management</option>
+    <option value="BIA">Business Intelligence &amp; Analytics</option>
+    <option value="MOBCOMPUTING">Mobile Computing</option>
+    <option value="HCI">Human-Computer Interaction</option>
+    <option value="ECOMMERCE">E-Commerce Technologies</option>
+    <option value="WEBTECH">Web Technologies</option>
+  </optgroup>
       </select>
       <label data-i18n="your_skills">Your current skills (comma separated)</label>
       <input type="text" id="careerSkills" placeholder="e.g. Python, HTML, Git">
