@@ -134,8 +134,13 @@ def generate(system_prompt, user_message, max_tokens=300, fallback=None):
                 return _call_gemini(system_prompt, user_message, max_tokens), provider
             if provider == "groq":
                 return _call_groq(system_prompt, user_message, max_tokens), provider
-        except Exception:
-            pass  # fall through to fallback
+        except Exception as exc:
+            # Log the real error so it shows up in server logs (e.g. Render's
+            # Logs tab) instead of silently vanishing -- this is the only way
+            # to actually diagnose "why did it fall back to rule-based".
+            import traceback
+            print(f"[ai_assistant] {provider} call failed: {exc}", flush=True)
+            traceback.print_exc()
 
     if callable(fallback):
         fallback = fallback()
@@ -229,8 +234,28 @@ def _rule_based_chat_reply(raw, profile):
 
 
 def chat_reply(message, profile=None, lang="en"):
-    reply, provider = generate(
-        _chat_system_prompt(profile, lang), message, max_tokens=420,
-        fallback=lambda: _rule_based_chat_reply(message, profile),
-    )
-    return reply, provider
+    provider = active_provider()
+    if provider != "rule_based":
+        try:
+            if provider == "openai":
+                return _call_openai(_chat_system_prompt(profile, lang), message, 420), provider
+            if provider == "gemini":
+                return _call_gemini(_chat_system_prompt(profile, lang), message, 420), provider
+            if provider == "groq":
+                return _call_groq(_chat_system_prompt(profile, lang), message, 420), provider
+        except Exception as exc:
+            import traceback
+            print(f"[ai_assistant] {provider} call failed: {exc}", flush=True)
+            traceback.print_exc()
+            fallback_reply = _rule_based_chat_reply(message, profile)
+            # TEMPORARY diagnostic: shows the real error inline so it's visible
+            # directly in the chat UI, not just server logs. Safe to remove
+            # once the underlying issue is confirmed fixed.
+            return (
+                fallback_reply
+                + f'<br><br><span style="opacity:0.6; font-size:12px;">'
+                + f"⚠️ {provider} API call failed: {type(exc).__name__}: {exc}</span>",
+                "rule_based (error)",
+            )
+
+    return _rule_based_chat_reply(message, profile), "rule_based"
