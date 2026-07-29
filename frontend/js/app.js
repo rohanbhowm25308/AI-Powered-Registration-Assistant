@@ -1,7 +1,8 @@
 /* ============ CONFIG ============ */
-const API_BASE = window.location.hostname && window.location.port === '5000'
-  ? ''
-  : 'http://localhost:5000';
+// Flask always serves the frontend AND the API from the same origin --
+// whether that's http://127.0.0.1:5000 locally or a Render URL in
+// production -- so API calls are always same-origin, relative paths.
+const API_BASE = '';
 
 let API_ONLINE = false;
 let studentProfile = null;   // { name, roll, dept, sem, cgpa, backlog, interests }

@@ -361,3 +361,11 @@ textarea{ font-family:'Inter',sans-serif; }
   transform:translateY(-1px);
   box-shadow:0 6px 18px rgba(79,224,255,0.3);
 }
+.footer-tagline{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:18px;
+  letter-spacing:0.5px;
+  color:var(--cyan-soft);
+  text-align:center;
+  margin-bottom:10px;
+}
