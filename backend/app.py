@@ -84,7 +84,13 @@ _LAN_IP = get_lan_ip()
 
 
 def verify_url(reg_id):
-    return f"http://{_LAN_IP}:5000/api/verify/{reg_id}"
+    host = request.host_url.rstrip("/")
+    # Only substitute the LAN IP when we're being accessed via localhost/127.0.0.1
+    # (pure local dev) -- in every real deployment (Render, etc.) request.host_url
+    # is already the correct, publicly reachable address, so use it as-is.
+    if "127.0.0.1" in host or "localhost" in host:
+        host = f"http://{_LAN_IP}:5000"
+    return f"{host}/api/verify/{reg_id}"
 
 
 # ---------------------------------------------------------------- static frontend
