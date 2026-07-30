@@ -155,24 +155,6 @@ Career   Placement    Analytics
 
 ---
 
-# 📷 Screenshots
-
-> Add your screenshots here.
-
-```
-screenshots/home.png
-
-screenshots/chatbot.png
-
-screenshots/dashboard.png
-
-screenshots/career.png
-
-screenshots/resume.png
-```
-
----
-
 # ⚙ Installation
 
 ```bash
